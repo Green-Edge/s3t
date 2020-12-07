@@ -1,0 +1,14 @@
+version: 2.0
+shards:
+  awscr-s3:
+    git: https://github.com/taylorfinnell/awscr-s3.git
+    version: 0.8.0
+
+  awscr-signer:
+    git: https://github.com/taylorfinnell/awscr-signer.git
+    version: 0.7.0
+
+  fiberpool:
+    git: https://github.com/akitaonrails/fiberpool.git
+    version: 0.1.0+git.commit.cdecd02c308a2b04aa7845df2d02bf2b460be648
+

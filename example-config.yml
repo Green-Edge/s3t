@@ -1,0 +1,11 @@
+service:
+  endpoint: https://nyc3.digitaloceanspaces.com
+  keys:
+    access: 1234567
+    secret: 9876543
+storage:
+  bucket: example
+  upload: 10mb_image.png
+limits:
+  count: 200_000_000
+  per_dir: 20_000
