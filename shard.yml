@@ -1,0 +1,17 @@
+name: s3t
+version: 0.1.0
+
+authors:
+  - Phillip Oldham <phillip@greenedgecloud.com>
+
+targets:
+  s3t:
+    main: src/s3t.cr
+
+crystal: 0.35.1
+
+dependencies:
+  fiberpool:
+    github: akitaonrails/fiberpool
+  awscr-s3:
+    github: taylorfinnell/awscr-s3
