@@ -29,3 +29,25 @@ limits:
 
 Note: for integer values, underscores can be used as separators to
 make them more readable.
+
+## Testing
+
+### Dependencies
+
+To run tests, [`s3rver`][s3rver] should be installed and findable
+in your `PATH`.
+
+### Running tests
+
+Clone the repository, `cd` into the directory, and execute:
+
+```bash
+# crystal spec
+```
+
+The test suite will start up and tear-down `s3rver` automatically, creating
+a temporary directory in your `TEMPDIR` for storing test files.
+
+**NOTE:** this temporary directory is **not** removed as part of the tear-down
+step. You should remember to do this manually at the end of each test run, after
+any verification steps you wish to take.

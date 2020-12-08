@@ -15,3 +15,5 @@ dependencies:
     github: akitaonrails/fiberpool
   awscr-s3:
     github: taylorfinnell/awscr-s3
+  tmpdir:
+    github: marceloboeira/tmpdir.cr

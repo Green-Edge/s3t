@@ -1,0 +1,11 @@
+service:
+  endpoint: localhost:12357
+  keys:
+    access: 1234567
+    secret: 9876543
+storage:
+  bucket: example
+  upload: ../1mb_image.png
+limits:
+  count: 2
+  per_dir: 20

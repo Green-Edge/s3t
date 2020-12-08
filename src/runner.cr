@@ -39,21 +39,26 @@ module S3t
         contents = File.read(@config.storage.upload)
       end
 
-      Log.debug {"File loaded from #{@config.storage.upload} (#{contents.size})"}
+      Log.debug {"Sample file loaded from #{@config.storage.upload} (#{contents.size})"}
 
       return contents
     end
 
     def run
-      Log.info {"Starting run, concurrency is: #{@config.limits.concurrency}"}
+      Log.info {"Starting run"}
+      Log.debug {"- concurrency is: #{@config.limits.concurrency}"}
 
       queue = (1..@config.limits.count).to_a
       results = [] of Int32
 
       pool = Fiberpool.new(queue, @config.limits.concurrency)
       pool.run do |item|
+        Log.debug {"Executing #{item}"}
         results << item
       end
+
+      Log.info {"Run completed"}
+      return results
     end
   end
 

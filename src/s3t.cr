@@ -30,7 +30,7 @@ module S3t
     exit(1)
   end
 
-  Log.setup_from_env(default_level: :debug)
+  Log.setup_from_env(default_level: :info)
 
   runner = Runner.new(configfile)
   runner.run

@@ -26,7 +26,7 @@ module S3t
   class LimitsConfig
     include YAML::Serializable
 
-    property concurrency : UInt8 = 10
+    property concurrency : Int32 = 10
     property count : UInt32
     property per_dir : UInt32
   end
