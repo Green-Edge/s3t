@@ -1,11 +1,12 @@
 service:
-  endpoint: localhost:12357
+  endpoint: http://0.0.0.0:4568
   keys:
-    access: 1234567
-    secret: 9876543
+    access: S3RVER
+    secret: S3RVER
 storage:
   bucket: example
-  upload: ../1mb_image.png
+  upload: 1mb_image.png
 limits:
   count: 2
-  per_dir: 20
+  per_dir: 2
+  concurrency: 2
