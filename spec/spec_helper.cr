@@ -1,7 +1,13 @@
 require "colorize"
+require "log"
+require "log/spec"
 require "spec"
-require "../src/runner"
+
 require "tmpdir"
+
+require "../src/runner"
+
+Log.setup(:none)
 
 mockservice = "s3rver"
 mockapi : Process? = nil
@@ -23,13 +29,31 @@ Spec.before_suite do
     "--silent", # Suppress log messages
   ]
 
-  puts "> Starting #{mockservice} with args: #{args.join(" ")}".colorize(:blue)
+  puts "> Starting #{mockservice} on port #{port.to_s}".colorize(:blue)
   mockapi = Process.new(mockservice, args, shell: true)
 
-  puts "> Starting runner...".colorize(:yellow)
-  runner = S3t::Runner.new("test.yml")
-  result = runner.run()
-  puts "> Results: #{result}".colorize(:yellow)
+  Log.capture do |logs|
+    puts "> Starting runner...".colorize(:yellow)
+
+    begin
+
+      runner = S3t::Runner.new("spec/test.yml")
+      result = runner.run()
+
+      # basic log checks
+      logs.check(:debug, /config loaded/i)
+      logs.check(:debug, /sample file loaded/i)
+      logs.check(:debug, /connecting to: localhost:#{port.to_s}/i)
+      logs.check(:info, /starting run/i)
+      logs.check(:info, /run completed/i)
+
+      puts "> Results: #{result}".colorize(:yellow)
+
+    rescue ex : Exception
+      puts "> Exception encountered: #{ex}".colorize(:red)
+      Spec.finish_run  # bail early
+    end
+  end
 
   puts "\n> -- Running checks --".colorize(:dark_gray)
 end
