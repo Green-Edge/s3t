@@ -7,6 +7,6 @@ storage:
   bucket: example
   upload: 1mb_image.png
 limits:
-  count: 2
-  per_dir: 2
+  count: 100
+  per_dir: 20
   concurrency: 2

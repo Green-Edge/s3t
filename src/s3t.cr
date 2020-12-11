@@ -15,6 +15,7 @@ module S3t
     parser.banner = "Usage: #{BINARY} [arguments]"
     parser.on("-c FILE", "--config=FILE", "Configuration YAML file") { |file| configfile = file }
     parser.on("-v", "--verbose", "Verbose output") { loglevel = Log::Severity::Debug }
+    parser.on("-V", "--very-verbose", "Very verbose output (for debugging)") { loglevel = Log::Severity::Trace }
     parser.on("-h", "--help", "Show this help") do
       puts parser
       exit
