@@ -1,5 +1,6 @@
 require "log"
 require "option_parser"
+
 require "./formatters"
 require "./runner"
 

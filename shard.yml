@@ -1,5 +1,5 @@
 name: s3t
-version: 0.1.0
+version: 0.1.1
 
 authors:
   - Phillip Oldham <phillip@greenedgecloud.com>
@@ -16,4 +16,5 @@ dependencies:
   awscr-s3:
     github: taylorfinnell/awscr-s3
   tmpdir:
-    github: marceloboeira/tmpdir.cr
+    github: Green-Edge/tmpdir.cr
+    branch: master
