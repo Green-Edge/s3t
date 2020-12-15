@@ -9,19 +9,23 @@ require "../src/runner"
 
 Log.setup(:none)
 
-mockservice = "s3rver"
-mockapi : Process? = nil
-address = "0.0.0.0"
-port = 4568
+module Store
+  class_property! results : Array(Bool)
+  class_property! logs : Log::EntriesChecker
+  class_property! config : S3t::Config
 
-results = [] of Bool
-logs : Log::EntriesChecker
-config = nil
+  class_property address = "0.0.0.0"
+  class_property port = 4568
+end
 
 describe S3t do
 
+  mockservice = "s3rver"
+  mockapi : Process? = nil
+
   Spec.before_suite do
     puts "\n> -- Setting up --".colorize(:dark_gray)
+
     if !Process.find_executable(mockservice)
       raise "Unable to find #{mockservice} in PATH"
     end
@@ -32,8 +36,8 @@ describe S3t do
 
     args = [
       "--directory", tmpdir, # Data directory
-      "--address", address, # Hostname or IP to bind to (default: "localhost")
-      "--port", port.to_s, # Port of the http server (default: 4568)
+      "--address", Store.address, # Hostname or IP to bind to (default: "localhost")
+      "--port", Store.port.to_s, # Port of the http server (default: 4568)
       "--silent", # Suppress log messages
     ]
 
@@ -41,23 +45,18 @@ describe S3t do
     mockapi = Process.new(mockservice, args, shell: true)
     sleep 3
 
-    Log.capture do |log_output|
+    Log.capture do |logs|
       puts "> Starting runner...".colorize(:yellow)
 
-      begin
+      runner = S3t::Runner.new("spec/test.yml")
 
-        runner = S3t::Runner.new("spec/test.yml")
-        config = runner.config
+      Store.config = runner.config
+      Store.results = runner.run()
+      Store.logs = logs
 
-        results = runner.run()
-        logs = log_output
-
-        # puts "> Results: #{results}".colorize(:yellow)
-
-      rescue ex : Exception
-        puts "> Exception encountered: #{ex}".colorize(:red)
-        Spec.finish_run  # bail early
-      end
+    rescue ex : Exception
+      puts "> Exception encountered: #{ex}".colorize(:red)
+      Spec.finish_run  # bail early
     end
 
     puts "\n> -- Running checks --".colorize(:dark_gray)

@@ -13,6 +13,6 @@ shards:
     version: 0.1.0+git.commit.cdecd02c308a2b04aa7845df2d02bf2b460be648
 
   tmpdir:
-    git: https://github.com/marceloboeira/tmpdir.cr.git
-    version: 0.1.0+git.commit.216999c04667f5d5e9e575f41b186ab6e698cb1b
+    git: https://github.com/Green-Edge/tmpdir.cr.git
+    version: 0.1.1+git.commit.adf40dc0bb9a6245467d47da0b1c861456938b19
 

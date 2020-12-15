@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    container:
+      image: crystallang/crystal
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install test dependencies
+        run: |
+          apt update
+          apt install -y npm
+          npm install -g s3rver
+      - name: Install project dependencies
+        run: shards install
+      - name: Run Tests
+        env:
+          CRYSTAL_ENV: test
+        run: crystal spec --error-trace
