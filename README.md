@@ -1,5 +1,7 @@
 # s3t
 
+![CI](https://github.com/Green-Edge/s3t/workflows/CI/badge.svg)
+
 `s3t` is a basic S3 testing tool.
 
 ## Usage

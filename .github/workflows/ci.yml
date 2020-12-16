@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
+    # CI shouldn't need to run on the main branch,
+    # just working & PR branches
+    branches-ignore:
       - main
 
 jobs:
@@ -14,15 +16,16 @@ jobs:
       image: crystallang/crystal
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Install test dependencies
+      - name: "[Git] Checkout code"
+        uses: actions/checkout@v2
+      - name: "[Setup] Install test dependencies"
         run: |
           apt update
           apt install -y npm
           npm install -g s3rver
-      - name: Install project dependencies
+      - name: "[Setup] Install project dependencies"
         run: shards install
-      - name: Run Tests
+      - name: "[Test] Run Specs"
         env:
           CRYSTAL_ENV: test
         run: crystal spec --error-trace
