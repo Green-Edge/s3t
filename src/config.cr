@@ -13,6 +13,7 @@ module S3t
     include YAML::Serializable
 
     property endpoint : String
+    property region : String?
     property keys : KeysConfig
   end
 
