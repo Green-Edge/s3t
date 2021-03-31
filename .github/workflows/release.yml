@@ -7,6 +7,9 @@ on:
     branches:
       - main
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   release:
     name: Create Release
@@ -17,6 +20,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: "[Setup] Cache Dependencies"
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /usr/local/bin/git-cl
+          key: ${{ runner.os }}-release
+          restore-keys: |
+            ${{ runner.os }}-release
 
       - name: "[Version] Install"
         uses: gittools/actions/gitversion/setup@v0.9.6
@@ -30,15 +43,58 @@ jobs:
       - name: "[Version] Capture"
         run: echo "RELEASE_VERSION=${{ steps.gitversion.outputs.semVer }}" >> $GITHUB_ENV
 
-      - name: "[Release] Create"
+      - name: "[Version] Update"
+        run: |
+          sed -i 's/version: .*/version: ${{env.RELEASE_VERSION}}/' shard.yml
+
+      - name: "[Changelog] Install build tools"
+        uses: fwal/setup-swift@v1
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          swift-version: "5.2"
+
+      - name: "[Changelog] Install git-ci"
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          cd /tmp/
+          git clone https://github.com/uptech/git-cl.git git-cl
+          cd ./git-cl
+          make -j$(nproc)
+          sudo make install
+          sudo chmod a+rwx /usr/local/bin/git-cl
+          cd -
+
+      - name: "[Changelog] Fail if no changelog entries"
+        run: |
+          git cl released ${{env.RELEASE_VERSION}}
+          [ "$(git cl released ${{env.RELEASE_VERSION}} | xargs)" ] || exit 1
+
+      - name: "[Changelog] Generate"
+        run: |
+          git cl full > CHANGELOG.md
+          sed -i 's/,.*$/./gi' CHANGELOG.md
+
+      - name: "[Release] Commit release updates"
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: '["shard.yml", "CHANGELOG.md"]'
+          message: "Update CHANGELOG & version for release"
+          push: true
+
+      - name: "[Release] Delete temporary tag"
+        uses: dev-drprasad/delete-tag-and-release@v0.1.2
+        with:
+          delete_release: false
+          tag_name: ${{env.RELEASE_VERSION}}
+
+      - name: "[Release] Create new release"
         id: create_release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{env.RELEASE_VERSION}}
           release_name: ${{env.RELEASE_VERSION}}
           body: |
-            Please see the changelog for details of this release
+            Please see the CHANGELOG for further details
           draft: false
           prerelease: false
+
