@@ -53,7 +53,7 @@ module S3t
 
     def new_client
       Awscr::S3::Client.new(
-        "target",
+        @config.service.region || "us-east-1",
         @config.service.keys.access,
         @config.service.keys.secret,
         endpoint: @config.service.endpoint,

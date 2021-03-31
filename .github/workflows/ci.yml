@@ -13,18 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: crystallang/crystal
+      image: crystallang/crystal:0.35.1
 
     steps:
       - name: "[Git] Checkout code"
         uses: actions/checkout@v2
+
       - name: "[Setup] Install test dependencies"
         run: |
           apt update
           apt install -y npm
           npm install -g s3rver
+
       - name: "[Setup] Install project dependencies"
         run: shards install
+
       - name: "[Test] Run Specs"
         env:
           CRYSTAL_ENV: test
